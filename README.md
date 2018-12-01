@@ -1,6 +1,8 @@
 # FTC-Robotics-Synergy-2018-2019
 
-Contains the TeleOp and 2 Autonomous Op Modes
+Contains the TeleOp and Autonomous Modes
+
+Contains just the "teamcode" sub folder at the lowest level of the directory. These files are just the js. code files.
 
 Created by Kevin Mathew
 
