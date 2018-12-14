@@ -17,11 +17,13 @@ public class AutoDriveDepot extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
+    private DcMotor liftDrive = null;
 
     //Servos Yall
     private Servo relicServo = null;
     private Servo Plow1 = null;
     private Servo Plow2 = null;
+
 
 
     static final double     FORWARD_SPEED = 0.6;
@@ -32,20 +34,24 @@ public class AutoDriveDepot extends LinearOpMode {
     public void runOpMode() {
         leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+        liftDrive = hardwareMap.get(DcMotor.class, "lift_drive");
+
         Plow1 = hardwareMap.get(Servo.class, "plow1");
         Plow2 = hardwareMap.get(Servo.class, "plow2");
+
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
         rightDrive.setDirection(DcMotor.Direction.FORWARD);
+        liftDrive.setDirection(DcMotor.Direction.FORWARD);
+
         relicServo = hardwareMap.get(Servo.class, "relicServo");
         relicServo.setPosition(0.35);
         Plow1.setPosition(0.48);
         Plow2.setPosition(0.48);
+
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
-
-
         // Send telemetry message to signify waiting;
         telemetry.addData("Status", "Ready to run");    //
         telemetry.update();
@@ -55,9 +61,26 @@ public class AutoDriveDepot extends LinearOpMode {
 
         // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
 
-        // Step 1:  Drive forward for 2.5 seconds
+        // Step 1:  Drop the bot from the lander.
+        liftDrive.setPower(-0.3);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 3)) {
+            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+
+        liftDrive.setPower(0);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 0.5)) {
+            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+
+
+        //Drive forward for 2.5 seconds
         leftDrive.setPower(FORWARD_SPEED);
         rightDrive.setPower(FORWARD_SPEED);
+
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 2.5)) {
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());

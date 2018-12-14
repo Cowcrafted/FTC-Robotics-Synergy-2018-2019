@@ -17,8 +17,9 @@ public class AutoDriveCrater extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
+    private DcMotor liftDrive = null;
 
-    //Servos Yall
+    //Servos Y'all
     private Servo relicServo = null;
     private Servo Plow1 = null;
     private Servo Plow2 = null;
@@ -32,14 +33,18 @@ public class AutoDriveCrater extends LinearOpMode {
     public void runOpMode() {
         leftDrive = hardwareMap.get(DcMotor.class, "left_drive");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+        liftDrive = hardwareMap.get(DcMotor.class, "lift_drive");
+
         Plow1 = hardwareMap.get(Servo.class, "plow1");
         Plow2 = hardwareMap.get(Servo.class, "plow2");
+
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
         rightDrive.setDirection(DcMotor.Direction.FORWARD);
+
         relicServo = hardwareMap.get(Servo.class, "relicServo");
         relicServo.setPosition(0.35);
-        Plow1.setPosition(0.48);
-        Plow2.setPosition(0.48);
+        Plow1.setPosition(0.4);
+        Plow2.setPosition(0.4);
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
@@ -55,7 +60,58 @@ public class AutoDriveCrater extends LinearOpMode {
 
         // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
 
-        // Step 1:  Drive forward for 3 seconds
+        // Step 1 Get the robot off of the lander. (Make sure it lifts to the point where it the lip lifts off the hatch.
+        liftDrive.setPower(0.3);
+        runtime.reset();
+
+        while (opModeIsActive() && (runtime.seconds() < 7.5)) {
+            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+
+        liftDrive.setPower(0);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 1.0)) {
+            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+
+        //Move backwards to prevent hitting lip from lander.
+        rightDrive.setPower(FORWARD_SPEED);
+        leftDrive.setPower(FORWARD_SPEED);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 0.7)) {
+            telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+
+        //Turn the Robot right to detach lip from hook
+        rightDrive.setPower(0.35);
+        leftDrive.setPower(-TURN_SPEED);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 1)) {
+            telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+
+        //Lower the lift arm
+        liftDrive.setPower(-0.3);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 7.5)) {
+            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+
+        // Turns right to correct lowered movement.
+        leftDrive.setPower(0.35);
+        rightDrive.setPower(-TURN_SPEED);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 1)) {
+            telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+
+        // Go forward for 2 seconds
         leftDrive.setPower(FORWARD_SPEED);
         rightDrive.setPower(FORWARD_SPEED);
         runtime.reset();
