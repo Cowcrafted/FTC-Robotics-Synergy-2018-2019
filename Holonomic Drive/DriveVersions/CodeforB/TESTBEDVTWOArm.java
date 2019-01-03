@@ -18,7 +18,7 @@ public class TESTBEDVTWOArm extends LinearOpMode {
     //private DcMotor rightYellow = null;
     private DcMotor liftDrive = null;
     private DcMotor armDrive = null;
-
+    private DcMotor pulley = null;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -32,7 +32,10 @@ public class TESTBEDVTWOArm extends LinearOpMode {
 
         liftDrive = hardwareMap.get(DcMotor.class, "LiftD");
         armDrive = hardwareMap.get(DcMotor.class,"ArmD");
+        pulley = hardwareMap.get(DcMotor.class,"PulleyD");
 
+
+        pulley.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -46,6 +49,9 @@ public class TESTBEDVTWOArm extends LinearOpMode {
 
             boolean armUp = gamepad1.left_bumper;
             boolean armDwn = gamepad1.right_bumper;
+
+            boolean pulleyUp = (gamepad1.left_trigger != 0);
+            boolean pulleyDown = (gamepad1.right_trigger != 0);
 
             double redPower = 0;
             double bluePower = 0;
@@ -91,6 +97,16 @@ public class TESTBEDVTWOArm extends LinearOpMode {
             }
             else{
                 armDrive.setPower(0);
+            }
+            //Code for the arm pulley system with left trigger (UP)
+            if(pulleyUp){
+                pulley.setPower(0.3);
+            }
+            else if(pulleyDown){
+                pulley.setPower(-0.3);
+            }
+            else{
+                pulley.setPower(0);
             }
 
             telemetry.addData("Status", "Run Time: " + runtime.toString());
