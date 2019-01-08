@@ -34,9 +34,10 @@ public class Robot_OmniDrive
     private LinearOpMode myOpMode;
 
 
-    private DcMotor  leftDrive      = null;
-    private DcMotor  rightDrive     = null;
-    private DcMotor  backDrive      = null;
+    private DcMotor leftRed = null;
+    private DcMotor leftBlue = null;
+    private DcMotor rightGreen = null;
+    private DcMotor rightYellow = null;
 
     private double  driveAxial      = 0 ;   // Positive is forward
     private double  driveLateral    = 0 ;   // Positive is right
@@ -55,13 +56,17 @@ public class Robot_OmniDrive
         myOpMode = opMode;
 
         // Define and Initialize Motors
-        leftDrive        = myOpMode.hardwareMap.get(DcMotor.class, "left drive");
-        rightDrive       = myOpMode.hardwareMap.get(DcMotor.class, "right drive");
-        backDrive        = myOpMode.hardwareMap.get(DcMotor.class, "back drive");
+        leftRed = myOpMode.hardwareMap.get(DcMotor.class, "LeftR");
+        leftBlue = myOpMode.hardwareMap.get(DcMotor.class, "LeftB");
+        rightGreen = myOpMode.hardwareMap.get(DcMotor.class, "RightG");
+        rightYellow = myOpMode.hardwareMap.get(DcMotor.class, "RightY");
 
-        leftDrive.setDirection(DcMotor.Direction.FORWARD); // Positive input rotates counter clockwise
-        rightDrive.setDirection(DcMotor.Direction.FORWARD);// Positive input rotates counter clockwise
-        backDrive.setDirection(DcMotor.Direction.FORWARD); // Positive input rotates counter clockwise
+        leftRed.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftBlue.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightGreen.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightYellow.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
 
         // Stop all robot motion by setting each axis value to zero
         moveRobot(0,0,0) ;
@@ -72,9 +77,9 @@ public class Robot_OmniDrive
         // The Right stick rotates CCW and CW.
 
         //  (note: The joystick goes negative when pushed forwards, so negate it)
-        setAxial(-myOpMode.gamepad1.left_stick_y);
+        setAxial(myOpMode.gamepad1.left_stick_y);
         setLateral(myOpMode.gamepad1.left_stick_x);
-        setYaw(-myOpMode.gamepad1.right_stick_x);
+        setYaw(myOpMode.gamepad1.right_stick_x);
     }
 
 
@@ -109,28 +114,34 @@ public class Robot_OmniDrive
      */
     public void moveRobot() {
         // calculate required motor speeds to acheive axis motions
-        double back = driveYaw + driveLateral;
-        double left = driveYaw - driveAxial - (driveLateral * 0.5);
-        double right = driveYaw + driveAxial - (driveLateral * 0.5);
+        double redPower ;
+        double bluePower;
+        double greenPower;
+        double yellowPower;
+
+
+        redPower = driveAxial - driveLateral + driveYaw;
+        bluePower = driveAxial + driveLateral + driveYaw;
+        greenPower= -driveAxial - driveLateral + driveYaw;
+        yellowPower = -driveAxial + driveLateral + driveYaw;
 
         // normalize all motor speeds so no values exceeds 100%.
-        double max = Math.max(Math.abs(back), Math.abs(right));
-        max = Math.max(max, Math.abs(left));
-        if (max > 1.0)
-        {
-            back /= max;
-            right /= max;
-            left /= max;
-        }
+        redPower = Range.clip(redPower, -0.5,0.5);
+        bluePower = Range.clip(bluePower, -0.5,0.5);
+        greenPower = Range.clip(greenPower, -0.5,0.5);
+        yellowPower = Range.clip(yellowPower, -0.5,0.5);
+
+
 
         // Set drive motor power levels.
-        backDrive.setPower(back);
-        leftDrive.setPower(left);
-        rightDrive.setPower(right);
+        leftRed.setPower(redPower);
+        leftBlue.setPower(bluePower);
+        rightGreen.setPower(greenPower);
+        rightYellow.setPower(yellowPower);
 
         // Display Telemetry
         myOpMode.telemetry.addData("Axes  ", "A[%+5.2f], L[%+5.2f], Y[%+5.2f]", driveAxial, driveLateral, driveYaw);
-        myOpMode.telemetry.addData("Wheels", "L[%+5.2f], R[%+5.2f], B[%+5.2f]", left, right, back);
+
     }
 
 
