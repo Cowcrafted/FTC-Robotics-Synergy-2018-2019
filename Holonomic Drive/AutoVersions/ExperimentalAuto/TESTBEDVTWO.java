@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -21,6 +22,8 @@ public class TESTBEDVTWO extends LinearOpMode {
     private DcMotor liftDrive = null;
     private DcMotor armDrive = null;
     private DcMotor pulleyDrive = null;
+
+    private Servo ScpDrive = null;
 
 
     @Override
@@ -44,6 +47,8 @@ public class TESTBEDVTWO extends LinearOpMode {
         armDrive = hardwareMap.get(DcMotor.class,"ArmD");
         pulleyDrive = hardwareMap.get(DcMotor.class,"PullD");
 
+        ScpDrive = hardwareMap.get(Servo.class,"ScoopD");
+
         armDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
@@ -53,6 +58,19 @@ public class TESTBEDVTWO extends LinearOpMode {
         while (opModeIsActive()) {
             boolean lftUp = gamepad1.dpad_up;
             boolean lftDwn = gamepad1.dpad_down;
+
+            boolean scpUp = gamepad1.dpad_left;
+            boolean scpDwn = gamepad1.dpad_right;
+
+            double prevPos = 0.5;
+            double currPos = 0.5;
+            double plowCnt = 0;
+
+            plowCnt = currPos;
+
+            prevPos = ScpDrive.getPosition();
+            currPos = prevPos;
+
 
             boolean pullUp = gamepad1.left_bumper;
             boolean pullDwn = gamepad1.right_bumper;
@@ -115,6 +133,21 @@ public class TESTBEDVTWO extends LinearOpMode {
             if(armDwn == 0 && armUp == 0){
                 armDrive.setPower(0);
             }
+
+            //the bucket
+
+            //tests for button presses plow up and down
+            //increments the position by 0.005 out of 0 to 1 range
+            if(scpUp){
+                plowCnt += 0.005;
+                currPos = plowCnt;
+            }
+            else if(scpDwn){
+                plowCnt -= 0.005;
+                currPos = plowCnt;
+            }
+
+            ScpDrive.setPosition(currPos);
 
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
