@@ -8,40 +8,33 @@ import com.qualcomm.robotcore.util.Range;
 public class TestBedFuctions {
 
     private TestBedHardWare     myRobot;        // Access to the Robot hardware
-
+    //a constructor for the class don't mess with it
     public TestBedFuctions(){
-
     }
-
+    //uses the class member to make an object
     public void initDrive(TestBedHardWare robot) {
         myRobot = robot;
     }
 
     //sends all power to move the robot
     public void moveRobot(double forw, double side, double spin) {
-
-        double redPower ;
-        double bluePower;
-        double greenPower;
-        double yellowPower;
-
-
-        redPower = forw - side + spin;
-        bluePower = forw + side + spin;
-        greenPower= -forw - side + spin;
-        yellowPower = -forw + side + spin;
+        //the math to drive the holonomic drive
+        myRobot.redPower = forw - side + spin;
+        myRobot.bluePower = forw + side + spin;
+        myRobot.greenPower= -forw - side + spin;
+        myRobot.yellowPower = -forw + side + spin;
 
         // normalize all motor speeds so no values exceeds 100%.
-        redPower = Range.clip(redPower, -myRobot.MAX_POWER, myRobot.MAX_POWER);
-        bluePower = Range.clip(bluePower, -myRobot.MAX_POWER, myRobot.MAX_POWER);
-        greenPower = Range.clip(greenPower, -myRobot.MAX_POWER, myRobot.MAX_POWER);
-        yellowPower = Range.clip(yellowPower, -myRobot.MAX_POWER, myRobot.MAX_POWER);
+        myRobot.redPower = Range.clip(myRobot.redPower, -myRobot.MAX_POWER, myRobot.MAX_POWER);
+        myRobot.bluePower = Range.clip(myRobot.bluePower, -myRobot.MAX_POWER, myRobot.MAX_POWER);
+        myRobot.greenPower = Range.clip(myRobot.greenPower, -myRobot.MAX_POWER, myRobot.MAX_POWER);
+        myRobot.yellowPower = Range.clip(myRobot.yellowPower, -myRobot.MAX_POWER, myRobot.MAX_POWER);
 
         // Set drive motor power levels.
-        myRobot.leftRed.setPower(redPower);
-        myRobot.leftBlue.setPower(bluePower);
-        myRobot.rightGreen.setPower(greenPower);
-        myRobot.rightYellow.setPower(yellowPower);
+        myRobot.leftRed.setPower(myRobot.redPower);
+        myRobot.leftBlue.setPower(myRobot.bluePower);
+        myRobot.rightGreen.setPower(myRobot.greenPower);
+        myRobot.rightYellow.setPower(myRobot.yellowPower);
     }
 
     //activates turbo mode
@@ -53,11 +46,9 @@ public class TestBedFuctions {
     public void lifting(boolean lftUp, boolean lftDwn){
         if(lftUp){
             myRobot.liftDrive.setPower(0.2);
-        }
-        else if(lftDwn){
+        }else if(lftDwn){
             myRobot.liftDrive.setPower(-0.2);
-        }
-        else{
+        }else{
             myRobot.liftDrive.setPower(0);
         }
     }
@@ -66,11 +57,9 @@ public class TestBedFuctions {
     public void pulling(boolean pullUp, boolean pullDwn ){
         if(pullUp){
             myRobot.pulleyDrive.setPower(0.2);
-        }
-        else if(pullDwn){
+        }else if(pullDwn){
             myRobot.pulleyDrive.setPower(-0.2);
-        }
-        else{
+        } else{
             myRobot.pulleyDrive.setPower(0);
         }
     }
@@ -86,16 +75,15 @@ public class TestBedFuctions {
         myRobot.plowCnt = myRobot.currPos;
         myRobot.prevPos = myRobot.ScpDrive.getPosition();
         myRobot.currPos = myRobot.prevPos;
-
+        //testing if it's pressed
         if(scpUp){
             myRobot.plowCnt += 0.005;
             myRobot.currPos = myRobot.plowCnt;
-        }
-        else if(scpDwn){
+        } else if(scpDwn){
             myRobot.plowCnt -= 0.005;
             myRobot.currPos = myRobot.plowCnt;
         }
-
+        //sets the position
         myRobot.ScpDrive.setPosition(myRobot.currPos);
     }
 }

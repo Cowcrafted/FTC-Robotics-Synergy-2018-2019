@@ -14,17 +14,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.List;
 
-/**
- * This 2018-2019 OpMode illustrates the basics of using the TensorFlow Object Detection API to
- * determine the position of the gold and silver minerals.
- *
- * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
- *
- * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
- * is explained below.
- */
-@Autonomous(name = "Sampling AutoV2OWO", group = "Linear OpMode")
+@Autonomous(name = "SamplingAuto-V3", group = "Linear OpMode")
 //@Disabled
 public class MineralDetectionV3 extends LinearOpMode {
 
@@ -36,18 +26,6 @@ public class MineralDetectionV3 extends LinearOpMode {
 
     TestBedHardWare uwuBot = new TestBedHardWare();
 
-    /*
-     * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
-     * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
-     * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
-     * web site at https://developer.vuforia.com/license-manager.
-     *
-     * Vuforia license keys are always 380 characters long, and look as if they contain mostly
-     * random data. As an example, here is a example of a fragment of a valid key:
-     *      ... yIgIzTqZ4mWjk9wd3cZO9T1axEqzuhxoGlfOOI2dRzKS4T0hQ8kT ...
-     * Once you've obtained a license key, copy the string from the Vuforia web site
-     * and paste it in to your code on the next line, between the double quotes.
-     */
     private static final String VUFORIA_KEY = "AZjoEnH/////AAABmXdFD2Xsrk4krInf+EdRY0NaRrdzvbptLaUoVN2kuF2/FnuWVscRF9ozak4bIpJCr1SLehfzrXHS+H3Z7XMNIgxwg6lttQ4zp7ODEDt1XQ/DLQcjpmYXruF4eBBRsIBey35Ue6g4E51WOebmNW/aDFDhz3zON+NNYbyk/4XOszsw7CwHpcNLBXqT0prM/NYwkCaJFocA8cpWcViM0Mka8kEV+T1X1ZtRnPwMxtQrxO19ksdbRv0bjPmco0iiOAvRwMcyVxg250tckD64iSWJkIhlqakYMLA1r00YPtUY4VSfShG0pWTDn/RF9/TqhM8qICp9ZPCz5QlPn8qt4cfiofTjzE41R+VvjKnIGK1B9g5o";
 
     /**
@@ -62,12 +40,15 @@ public class MineralDetectionV3 extends LinearOpMode {
      */
     private TFObjectDetector tfod;
 
+    //some global variables used by functions
     int goldPos = 0;
+    public int spinDirect = 0;
 
     @Override
     public void runOpMode() {
+        //initializes all the hardward for the robot
         uwuBot.initDrive(this);
-
+        //initializes all the vuforia tracking systems
         initVuforia();
 
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
@@ -123,7 +104,10 @@ public class MineralDetectionV3 extends LinearOpMode {
                     }
                 }
             }
+        //function that moves to knock off gold and calls a face to wall
         determineRoute(goldPos);
+        //function that moves to the wall to align and travels to depot
+        approachWall();
         }
 
         if (tfod != null) {
@@ -132,29 +116,57 @@ public class MineralDetectionV3 extends LinearOpMode {
     }
     //compares the position of the golds
     public void determineRoute(int goldPos){
+        //change this spintime to change how much extra spin the second path may need
+        double spinTime = 1.0;
         if(goldPos == 1){
             owoLeft();
-        }
-        else if(goldPos == 3){
+            spinTime = 1.0;
+            spinDirect = -1;
+        } else if(goldPos == 3){
             owoRight();
-        }
-        else{
+            spinTime = 1.0;
+            spinDirect = 1;
+        } else{
             owoCen();
+            spinTime = 1.0;
+            spinDirect = 1;
         }
-        moveAny(0.45,-0.06,0.02,0.9);
+        //backs up the robot and spins to face a wall
+        spintoWall(spinTime, spinDirect);
     }
-
+    //the respective functions for each possibility of the gold
     public void owoLeft(){
-        moveAny(0.45,-0.06,0.02,0.9);
+        moveAny(0.4,0.0,0.0,1.0);
+        moveAny(0.0,0.3,0.0,0.6);
+        moveAny(0.3,0.0,0.0,0.9);
+        moveAny(0.0,0,0.0,0.5);
+    }
+    public void owoCen(){
+        moveAny(0.35,-0.035,0.03,2.2);
+        moveAny(0.0,0.00,0.00,0.5);
+        moveAny(0.0,0,0.0,0.5);
     }
     public void owoRight(){
         moveAny(0.45,-0.06,0.02,0.9);
+        moveAny(0.0,-0.34,0.0,1);
+        moveAny(0.3,0.0,0.01,1);
+        moveAny(0.0,0,0.0,0.5);
     }
-    public void owoCen(){
-        moveAny(0.45,-0.06,0.02,0.9);
+    //this backs up the robot and faces the closer wall
+    public void spintoWall(double spinTime,int spinDirect){
+        moveAny(0.0,0.0,0.0,0.5);
+        moveAny(-0.3,0.0,0.0,0.5);
+        moveAny(0.0,0.0,spinDirect*0.2,spinTime);
+        moveAny(0.0,0,0.0,0.5);
+    }
+    //this drives the robot forward and uses the wall to align itself
+    public void approachWall(){
+        moveAny(0.3,0.0,-spinDirect*0.1,1.5);
+        moveAny(0.1,spinDirect*0.3,0.0,1.5);
+        moveAny(0.0,0,0.0,0.5);
     }
 
-    //a general function to move any
+    //a general function to move using any input for the bot
     public void moveAny(double forw, double side, double spin, double time){
 
         uwuBot.redPower = forw - side + spin;

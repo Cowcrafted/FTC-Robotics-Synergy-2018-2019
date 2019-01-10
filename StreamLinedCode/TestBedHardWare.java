@@ -9,32 +9,29 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 public class TestBedHardWare {
-
+    //imports the class member
     private LinearOpMode myOpMode;
+    //creates a new object to use the zeroing move function
     TestBedFuctions functions = new TestBedFuctions();
-
+    //driving motors
     public DcMotor leftRed = null;
     public DcMotor leftBlue = null;
     public DcMotor rightGreen = null;
     public DcMotor rightYellow = null;
-
+    //exterior motors not for driving
     public DcMotor liftDrive = null;
     public DcMotor armDrive = null;
     public DcMotor pulleyDrive = null;
-
+    //the servo for thescoop
     public Servo ScpDrive = null;
-
-    public double  forw = 0 ;
-    public double  side = 0 ;
-    public double  spin = 0 ;
-
+    //this value for how fast the robot will go
     public double MAX_POWER = 0.5;
-
+    //values to make a stepper for the servo to work
     double prevPos = 0.0;
     double currPos = 0.5;
     double plowCnt = 0;
 
-    double redPower ;
+    double redPower;
     double bluePower;
     double greenPower;
     double yellowPower;
