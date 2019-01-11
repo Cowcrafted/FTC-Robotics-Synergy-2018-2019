@@ -11,8 +11,6 @@ import com.qualcomm.robotcore.util.Range;
 public class TestBedHardWare {
     //imports the class member
     private LinearOpMode myOpMode;
-    //creates a new object to use the zeroing move function
-    TestBedFuctions functions = new TestBedFuctions();
     //driving motors
     public DcMotor leftRed = null;
     public DcMotor leftBlue = null;
@@ -24,17 +22,11 @@ public class TestBedHardWare {
     public DcMotor pulleyDrive = null;
     //the servo for thescoop
     public Servo ScpDrive = null;
-    //this value for how fast the robot will go
-    public double MAX_POWER = 0.5;
     //values to make a stepper for the servo to work
-    double prevPos = 0.0;
-    double currPos = 0.5;
-    double plowCnt = 0;
+    double prevPos;
+    double currPos;
+    double plowCnt;
 
-    double redPower;
-    double bluePower;
-    double greenPower;
-    double yellowPower;
 
     public TestBedHardWare(){
 
@@ -62,9 +54,6 @@ public class TestBedHardWare {
         rightYellow.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //Brakes the Arm
         armDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-
-        // Stop all robot motion by setting each axis value to zero
-        functions.moveRobot(0,0,0) ;
+        armDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 }

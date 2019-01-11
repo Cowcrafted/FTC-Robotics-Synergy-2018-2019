@@ -44,6 +44,12 @@ public class MineralDetectionV3 extends LinearOpMode {
     int goldPos = 0;
     public int spinDirect = 0;
 
+    //some powers
+    double redPower;
+    double bluePower;
+    double greenPower;
+    double yellowPower;
+
     @Override
     public void runOpMode() {
         //initializes all the hardward for the robot
@@ -169,15 +175,15 @@ public class MineralDetectionV3 extends LinearOpMode {
     //a general function to move using any input for the bot
     public void moveAny(double forw, double side, double spin, double time){
 
-        uwuBot.redPower = forw - side + spin;
-        uwuBot.bluePower = forw + side + spin;
-        uwuBot.greenPower = -forw - side + spin;
-        uwuBot.yellowPower = -forw + side + spin;
+        redPower = forw - side + spin;
+        bluePower = forw + side + spin;
+        greenPower = -forw - side + spin;
+        yellowPower = -forw + side + spin;
 
-        uwuBot.leftRed.setPower(uwuBot.redPower);
-        uwuBot.leftBlue.setPower(uwuBot.bluePower);
-        uwuBot.rightGreen.setPower(uwuBot.greenPower);
-        uwuBot.rightYellow.setPower(uwuBot.yellowPower);
+        uwuBot.leftRed.setPower(redPower);
+        uwuBot.leftBlue.setPower(bluePower);
+        uwuBot.rightGreen.setPower(greenPower);
+        uwuBot.rightYellow.setPower(yellowPower);
 
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < time)) {

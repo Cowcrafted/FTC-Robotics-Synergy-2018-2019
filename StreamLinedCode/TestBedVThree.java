@@ -15,11 +15,11 @@ public class TestBedVThree extends LinearOpMode {
 
     //creates a new object for the hardwareclass
     TestBedHardWare uwuBot = new TestBedHardWare();
-    TestBedFuctions functions = new TestBedFuctions();
+    TestBedFunctions functions = new TestBedFunctions();
 
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
 
         //initializes all the hardware in the other class
         uwuBot.initDrive(this);
