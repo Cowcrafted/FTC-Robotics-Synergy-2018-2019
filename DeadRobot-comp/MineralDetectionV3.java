@@ -121,7 +121,7 @@ public class MineralDetectionV3 extends LinearOpMode {
         //function that moves to knock off gold and calls a face to wall
         determineRoute(goldPos);
         //function that moves to the wall to align and travels to depot
-        approachWall();
+        //approachWall();
         }
 
         if (tfod != null) {
@@ -146,23 +146,28 @@ public class MineralDetectionV3 extends LinearOpMode {
             spinDirect = 1;
         }
         //backs up the robot and spins to face a wall
-        spintoWall(spinTime, spinDirect);
+        //spintoWall(spinTime, spinDirect);
     }
     //the respective functions for each possibility of the gold
     public void owoLeft(){
-        moveAny(0.3,0.0,0.0,1.0);
-        moveAny(0.0,0.3,0.0,0.6);
+        moveAny(0.3,0.0,0.0,0.8);
+        moveAny(0.0,0.33,0.0,0.8);
+        moveAny(0.45,0.06,0.0,0.5);
         moveAny(0.0,0,0.0,0.5);
+
 
     }
     public void owoCen(){
-        moveAny(0.35,-0.035,0.0,2.2);
+        moveAny(0.35,-0.035,0.0,1.1);
+        moveAny(0.35,-0.01,0.,0.9);
         moveAny(0.0,0,0.0,0.5);
+
         ///flick();
     }
     public void owoRight(){
-        moveAny(0.45,-0.06,0.0,0.9);
-        moveAny(0.0,-0.34,0.0,1);
+        moveAny(0.45,-0.06,0.0,0.8);
+        moveAny(0.0,-0.33,0.0,1.2);
+        moveAny(0.45,-0.06,0.0,0.5);
         moveAny(0.0,0,0.0,0.5);
         //flick();
     }
@@ -191,7 +196,7 @@ public class MineralDetectionV3 extends LinearOpMode {
     uwuBot.liftDrive.setPower(-0.5);
     runtime.reset();
 
-    while (opModeIsActive() && (runtime.seconds() < 6)) {
+    while (opModeIsActive() && (runtime.seconds() < 5.6)) {
         telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
         telemetry.update();
     }
@@ -203,16 +208,19 @@ public class MineralDetectionV3 extends LinearOpMode {
         telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
         telemetry.update();
     }
-    moveAny(0.0,0.2,0.0,0.2);
-
+    moveAny(0.0,-0.4,0.0,0.2);
+    moveAny(0.0,0.0,0.0,0.2);
     uwuBot.liftDrive.setPower(0.5);
     runtime.reset();
 
-    while (opModeIsActive() && (runtime.seconds() < 6)) {
+    while (opModeIsActive() && (runtime.seconds() < 5.5)) {
         telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
         telemetry.update();
     }
-    moveAny(0.0,-0.2,0.0,0.2);
+    uwuBot.liftDrive.setPower(0.0);
+
+    moveAny(0.0,0.4,0.0,0.2);
+    moveAny(0.0,0.0,0.0,0.2);
     }
 
     //a general function to move using any input for the bot
