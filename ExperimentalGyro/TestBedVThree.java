@@ -13,16 +13,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 
 @TeleOp(name="TestBedVThree", group="Linear OpMode")
-@Disabled
+//@Disabled
 public class TestBedVThree extends LinearOpMode {
     ElapsedTime runtime = new ElapsedTime();
     //creates a new object for the hardwareclass
     TestBedHardWare uwuBot = new TestBedHardWare();
-    TestBedFuctions functions = new TestBedFuctions();
+    TestBedFunctions functions = new TestBedFunctions();
     GyroCalc logic = new GyroCalc();
     @Override
     public void runOpMode() throws InterruptedException {
-
         //initializes all the hardware in the other class
         uwuBot.initDrive(this);
         functions.initDrive(uwuBot);

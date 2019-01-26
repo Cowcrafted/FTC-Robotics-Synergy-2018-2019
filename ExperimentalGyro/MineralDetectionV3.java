@@ -16,7 +16,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import java.util.List;
 
 @Autonomous(name = "SamplingAuto-V3", group = "Linear OpMode")
-@Disabled
+//@Disabled
 public class MineralDetectionV3 extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
     private static final String LABEL_GOLD_MINERAL = "Gold Mineral";

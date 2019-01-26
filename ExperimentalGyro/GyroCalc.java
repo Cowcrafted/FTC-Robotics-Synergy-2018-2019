@@ -46,8 +46,8 @@ public class GyroCalc {
     Orientation lastAngles = new Orientation();
     public double globalAngle, correction;
     public double dState;
-    double pGain = 0.5;
-    double dGain = -0.8;
+    double pGain = 0.01;
+    double dGain = -0.01;
     public double target = 0.0;
     public Orientation angles;
     public Acceleration gravity;
