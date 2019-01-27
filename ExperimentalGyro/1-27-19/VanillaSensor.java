@@ -58,24 +58,13 @@ import java.util.Locale;
 //@Disabled                            // Comment this out to add to the opmode list
 public class VanillaSensor extends LinearOpMode
     {
-    //----------------------------------------------------------------------------------------------
-    // State
-    //----------------------------------------------------------------------------------------------
     Orientation lastAngles = new Orientation();
     double globalAngle, correction;
     double pGain = 0.5;
     public double target = 0.0;
-
-    // The IMU sensor object
     BNO055IMU imu;
-    // State used for updating telemetry
     Orientation angles;
     Acceleration gravity;
-
-    //----------------------------------------------------------------------------------------------
-    // Main logic
-    //----------------------------------------------------------------------------------------------
-
     @Override public void runOpMode() {
 
         // Set up the parameters with which we will use our IMU. Note that integration
@@ -88,20 +77,10 @@ public class VanillaSensor extends LinearOpMode
         parameters.loggingEnabled      = true;
         parameters.loggingTag          = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
-        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
-        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
-        // and named "imu".
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
-
-        // Wait until we're told to go
         waitForStart();
-
-        // Start the logging of measured acceleration
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-
-        // Loop and update the dashboard
         while (opModeIsActive()) {
             correction = checkDirection();
             telemetry.addData("1 imu heading", lastAngles.firstAngle);
@@ -110,9 +89,6 @@ public class VanillaSensor extends LinearOpMode
             telemetry.update();
         }
     }
-    //----------------------------------------------------------------------------------------------
-    // Telemetry Configuration
-    //----------------------------------------------------------------------------------------------
     private void resetAngle()
     {
         lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);

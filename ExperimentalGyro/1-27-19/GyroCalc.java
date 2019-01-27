@@ -76,29 +76,18 @@ public class GyroCalc {
     double checkDirection() {
         Orientation angles = myRobot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         double correction;
-        correction = determinePID(target-angles.firstAngle,angles.firstAngle, true);
+        correction = determinePID(target-angles.firstAngle,angles.firstAngle);
         return correction;
     }
-    double determinePID(double error, double position, boolean need){
+    double determinePID(double error, double position){
         pTerm = pGain * error;
         dTerm = dGain * (dState - position);
         dState = position;
-        double PDcor  = 0;
-        if(need){
-            PDcor = pTerm+dTerm;
-            if(error/error !=1){
-                PDcor = -1*PDcor;
-            }
+        double PDcor;
+        PDcor = pTerm+dTerm;
+        if(error/error !=1){
+            PDcor = -1*PDcor;
         }
         return PDcor;
-    }
-    boolean checkError(){
-        boolean errorNeed;
-        if(target-getAngle() >= 3){
-            errorNeed = false;
-        }else{
-            errorNeed = true;
-        }
-        return errorNeed;
     }
 }
